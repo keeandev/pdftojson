@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 import cgi
 from io import BytesIO
-from pdfminer.high_level import extract_text
+from pdfminer.high_level import extract_text_to_fp
 from pdfminer.layout import LAParams
 
 
@@ -14,11 +14,11 @@ class handler(BaseHTTPRequestHandler):
         page_contents = []
 
         with BytesIO(pdf_content) as f:
-            for page_num, page in enumerate(extract_text(f, laparams=LAParams(), output_type='dict')):
+            for page_num, page in enumerate(extract_text_to_fp(f, laparams=LAParams(), output_type='dict')):
                 total_pages += 1
                 page_content = page['text']
                 page_contents.append(
-                    {'page': page_num + 1, 'content': page_content})
+                    {'page_number': page_num+1, 'content': page_content})
 
         return {'total_pages': total_pages, 'page_contents': page_contents}
 
