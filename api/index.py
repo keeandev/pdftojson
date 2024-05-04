@@ -21,10 +21,9 @@ class handler(BaseHTTPRequestHandler):
                 for element in page_layout:
                     if isinstance(element, LTTextContainer):
                         page_content += element.get_text()
-                page_contents.append(
-                    {'page': page_num + 1, 'content': page_content.strip()})
+                page_contents.append(page_content.strip())
 
-        return {'total_pages': total_pages, 'page_contents': page_contents}
+        return {'total': total_pages, 'pages': page_contents}
 
     def do_GET(self):
         self.send_response(200)
