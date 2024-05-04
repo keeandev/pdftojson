@@ -30,15 +30,31 @@ class handler(BaseHTTPRequestHandler):
         return
 
     def do_POST(self):
-        form = cgi.FieldStorage(
-            fp=self.rfile,
-            headers=self.headers,
-            environ={'REQUEST_METHOD': 'POST',
-                     'CONTENT_TYPE': self.headers['Content-Type'],
-                     })
+        content_length = int(self.headers['Content-Length'])
+        body = self.rfile.read(content_length)
 
-        pdf_content = self.extract_pdf_content(form["file"].file)
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps(pdf_content).encode())
+        if 'Content-Type' in self.headers:
+            content_type = self.headers['Content-Type']
+            if content_type.startswith('multipart/form-data'):
+                form = {}
+                for item in body.decode('utf-8').split('\r\n'):
+                    if item.startswith('Content-Disposition'):
+                        _, params = item.split('; ')
+                        name = params.split('=')[1].strip('"')
+                        form[name] = body.split(item.encode())[
+                            1].strip().strip(b'--\r\n')
+
+        if 'file' in form:
+            pdf_content = form['file']
+            try:
+                result = self.extract_pdf_content(pdf_content)
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps(result).encode())
+            except Exception as e:
+                self.send_error(
+                    500, 'Error extracting PDF content: {}'.format(e))
+            return
+        else:
+            self.send_error(400, 'Missing \'file\' in FormData.')
