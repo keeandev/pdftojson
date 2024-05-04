@@ -22,12 +22,12 @@ class handler(BaseHTTPRequestHandler):
 
         return {'total_pages': total_pages, 'page_contents': page_contents}
 
-    # def do_GET(self):
-    #     self.send_response(200)
-    #     self.send_header('Content-type', 'application/json')
-    #     self.end_headers()
-    #     self.wfile.write('Hello, world!'.encode('utf-8'))
-    #     return
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write('Welcome to the PDFMiner API!\n'.encode('utf-8'))
+        return
 
     def do_POST(self):
         form = cgi.FieldStorage(
