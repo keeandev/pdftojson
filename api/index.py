@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 
 import json
-import cgi
+import os
 from io import BytesIO
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LAParams
@@ -15,7 +15,7 @@ class handler(BaseHTTPRequestHandler):
         page_contents = []
 
         with BytesIO(pdf_content) as f:
-            for page_num, page_layout in enumerate(extract_pages(f, laparams=LAParams(), caching=False)):
+            for _, page_layout in enumerate(extract_pages(f, laparams=LAParams())):
                 total_pages += 1
                 page_content = ''
                 for element in page_layout:
@@ -27,9 +27,10 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self.send_response(200)
-        self.send_header('Content-type', 'application/json')
+        self.send_header('content-type', 'application/json')
         self.end_headers()
-        self.wfile.write('Welcome to the PDFMiner API!\n'.encode('utf-8'))
+        self.wfile.write(
+            f'Welcome to the PDFMiner API!\nSend a POST request to \'{f'https://{os.environ['VERCEL_URL']}' if 'VERCEL_URL' in os.environ else ''}/api\' with a binary file to extract the pages and their contents!'.encode('utf-8'))
         return
 
     def do_POST(self):
@@ -39,7 +40,7 @@ class handler(BaseHTTPRequestHandler):
         try:
             result = self.extract_pdf_content(body)
             self.send_response(200)
-            self.send_header('Content-type', 'application/json')
+            self.send_header('content-type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps(result).encode())
         except Exception as e:
