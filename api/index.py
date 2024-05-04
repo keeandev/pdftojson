@@ -30,25 +30,14 @@ class handler(BaseHTTPRequestHandler):
         return
 
     def do_POST(self):
-        content_type, params = cgi.parse_header(self.headers['content-type'])
+        content_length = int(self.headers['Content-Length'])
+        body = self.rfile.read(content_length)
 
-        if content_type == 'multipart/form-data':
-            boundary = params['boundary'].encode()
-
-            try:
-                form_data = cgi.parse_multipart(
-                    self.rfile, {'boundary': boundary})
-                if b'file' in form_data:
-                    pdf_content = form_data[b'file'][0]
-                    result = self.extract_pdf_content(pdf_content)
-                    self.send_response(200)
-                    self.send_header('Content-type', 'application/json')
-                    self.end_headers()
-                    self.wfile.write(json.dumps(result).encode())
-                else:
-                    self.send_error(400, 'Missing \'file\' in FormData.')
-            except Exception as e:
-                self.send_error(
-                    500, 'Error extracting PDF content: {}'.format(e))
-        else:
-            self.send_error(400, 'Bad Request: Unsupported Content-Type')
+        try:
+            result = self.extract_pdf_content(body)
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
+        except Exception as e:
+            self.send_error(500, 'Error extracting PDF content: {}'.format(e))
