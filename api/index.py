@@ -5,6 +5,7 @@ import cgi
 from io import BytesIO
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LAParams
+from pdfminer.layout import LTTextContainer
 
 
 class handler(BaseHTTPRequestHandler):
@@ -18,7 +19,8 @@ class handler(BaseHTTPRequestHandler):
                 total_pages += 1
                 page_content = ''
                 for element in page_layout:
-                    page_content += element.get_text()
+                    if isinstance(element, LTTextContainer):
+                        page_content += element.get_text()
                 page_contents.append(
                     {'page': page_num + 1, 'content': page_content.strip()})
 
