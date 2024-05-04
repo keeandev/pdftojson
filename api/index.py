@@ -6,22 +6,21 @@ from pdfminer.high_level import extract_text
 from pdfminer.layout import LAParams
 
 
-def extract_pdf_content(pdf_file):
-    # Extract text from PDF
-    total_pages = 0
-    page_contents = []
-
-    with open(pdf_file, 'rb') as f:
-        for page_num, page in enumerate(extract_text(f, laparams=LAParams(), output_type='dict')):
-            total_pages += 1
-            page_content = page['text']
-            page_contents.append(
-                {'page': page_num + 1, 'content': page_content})
-
-    return {'total_pages': total_pages, 'page_contents': page_contents}
-
-
 class handler(BaseHTTPRequestHandler):
+
+    def extract_pdf_content(pdf_file):
+        # Extract text from PDF
+        total_pages = 0
+        page_contents = []
+
+        with open(pdf_file, 'rb') as f:
+            for page_num, page in enumerate(extract_text(f, laparams=LAParams(), output_type='dict')):
+                total_pages += 1
+                page_content = page['text']
+                page_contents.append(
+                    {'page': page_num + 1, 'content': page_content})
+
+        return {'total_pages': total_pages, 'page_contents': page_contents}
 
     # def do_GET(self):
     #     self.send_response(200)
