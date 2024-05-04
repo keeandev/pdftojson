@@ -30,7 +30,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('content-type', 'application/json')
         self.end_headers()
         self.wfile.write(
-            f'Welcome to the PDFMiner API!\nSend a POST request to \'{f'https://{os.environ['VERCEL_URL']}' if 'VERCEL_URL' in os.environ else ''}/api\' with a binary file to extract the pages and their contents!'.encode('utf-8'))
+            f'Welcome to the PDFMiner API!\nSend a POST request to \'{f'https://{os.environ['API_URL']}' if 'API_URL' in os.environ else ''}\' with a binary file to extract its pages & contents!'.encode('utf-8'))
         return
 
     def do_POST(self):
