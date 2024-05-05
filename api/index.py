@@ -25,7 +25,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'max-age=31536000, immutable')
         self.send_header('CDN-Cache-Control', 'max-age=31536000, immutable')
         self.end_headers()
-        self.wfile.write('Welcome to the PDFMiner API!\n'.encode('utf-8'))
+        self.wfile.write('Welcome to the PDF to JSON API (pdfminer.six API)!\n'.encode('utf-8'))
         self.wfile.write(
             f'Send a POST request to \'https://{os.environ["API_URL"]}\' with a binary file to extract its pages & contents!'.encode('utf-8'))
         return

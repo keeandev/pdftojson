@@ -2,7 +2,7 @@
 
 https://pdftojson.vercel.app
 
-This is a simple utility API that converts PDFs to structured JSON objects.
+This is a simple utility API that converts PDFs to structured JSON objects powered by [pdfminer.six](https://github.com/pdfminer/pdfminer.six).
 
 ```json
 {
