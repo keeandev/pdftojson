@@ -28,6 +28,8 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.send_header('content-type', 'application/json')
+        self.send_header('Cache-Control', 'max-age=31536000, immutable')
+        self.send_header('CDN-Cache-Control', 'max-age=31536000, immutable')
         self.end_headers()
         self.wfile.write(
             f'Welcome to the PDFMiner API!\nSend a POST request to \'{f'https://{os.environ['API_URL']}' if 'API_URL' in os.environ else ''}\' with a binary file to extract its pages & contents!'.encode('utf-8'))
@@ -41,6 +43,8 @@ class handler(BaseHTTPRequestHandler):
             result = self.extract_pdf_content(body)
             self.send_response(200)
             self.send_header('content-type', 'application/json')
+            self.send_header('Cache-Control', 'max-age=31536000, immutable')
+            self.send_header('CDN-Cache-Control', 'max-age=31536000, immutable')
             self.end_headers()
             self.wfile.write(json.dumps(result).encode())
         except Exception as e:
