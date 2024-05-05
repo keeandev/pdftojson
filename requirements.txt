@@ -1,3 +1,4 @@
 pdfminer.six
 upstash-redis
+upstash-ratelimit
 xxhash

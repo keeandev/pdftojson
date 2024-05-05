@@ -7,9 +7,16 @@ from pdfminer.high_level import extract_pages
 from pdfminer.layout import LAParams
 from pdfminer.layout import LTTextContainer
 from upstash_redis import Redis
+from upstash_ratelimit import Ratelimit, FixedWindow
 import xxhash
 
 redis = Redis.from_env()
+
+ratelimit = Ratelimit(
+    redis=Redis.from_env(),
+    limiter=FixedWindow(max_requests=2, window=10),
+    prefix="upstash-ratelimit",
+)
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -24,6 +31,12 @@ class handler(BaseHTTPRequestHandler):
         return
 
     def do_POST(self):
+        response = ratelimit.limit("api")
+
+        if not response.allowed:
+            self.send_response(429)
+            self.wfile.write("Too Many Requests".encode("utf-8"))
+
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
 
