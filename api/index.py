@@ -59,7 +59,7 @@ class handler(BaseHTTPRequestHandler):
                             if isinstance(element, LTTextContainer):
                                 page_content += element.get_text()
                         page_contents.append(page_content.strip())
-                    result = {'total': total_pages, 'pages': page_contents}
+                    result = json.dumps({'total': total_pages, 'pages': page_contents})
                     redis.set(xxh.digest(), result)
 
             self.send_response(200)
