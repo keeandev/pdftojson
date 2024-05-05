@@ -21,8 +21,8 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.send_header('content-type', 'application/json')
-        self.send_header('Cache-Control', 'max-age=31536000, immutable')
-        self.send_header('CDN-Cache-Control', 'max-age=31536000, immutable')
+        self.send_header('Cache-Control', 'max-age=86400, public')
+        self.send_header('CDN-Cache-Control', 'max-age=86400, public')
         self.end_headers()
         self.wfile.write('Welcome to the PDF to JSON API (pdfminer.six API)!\n'.encode('utf-8'))
         self.wfile.write(
@@ -58,6 +58,7 @@ class handler(BaseHTTPRequestHandler):
                             if isinstance(element, LTTextContainer):
                                 page_content += element.get_text()
                         page_contents.append(page_content.strip())
+
                     result = json.dumps({'total': total_pages, 'pages': page_contents})
                     redis.set(xxh.hexdigest(), result)
 
