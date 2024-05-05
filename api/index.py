@@ -33,8 +33,7 @@ class handler(BaseHTTPRequestHandler):
         response = ratelimit.limit("api")
 
         if not response.allowed:
-            self.send_response(429)
-            self.wfile.write("Too Many Requests".encode("utf-8"))
+            self.send_error(429, 'Too Many Requests')
 
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
