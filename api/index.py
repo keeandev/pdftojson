@@ -48,7 +48,8 @@ class handler(BaseHTTPRequestHandler):
                 for chunk in iter(lambda: f.read(4096), b''):
                     xxh.update(chunk)
 
-                result = redis.get(xxh.hexdigest())
+                hash = xxh.hexdigest()
+                result = redis.get(hash)
 
                 if not result:
                     for _, page_layout in enumerate(extract_pages(f, laparams=LAParams())):
@@ -59,8 +60,8 @@ class handler(BaseHTTPRequestHandler):
                                 page_content += element.get_text()
                         page_contents.append(page_content.strip())
 
-                    result = json.dumps({'total': total_pages, 'pages': page_contents})
-                    redis.set(xxh.hexdigest(), result)
+                    result = json.dumps({'hash': hash, 'total': total_pages, 'pages': page_contents})
+                    redis.set(hash, result)
 
             self.send_response(200)
             self.send_header('content-type', 'application/json')
