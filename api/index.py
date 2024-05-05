@@ -1,14 +1,13 @@
+from upstash_ratelimit import Ratelimit, FixedWindow
 from http.server import BaseHTTPRequestHandler
-
+from pdfminer.high_level import extract_pages
+from pdfminer.layout import LTTextContainer
+from pdfminer.layout import LAParams
+from upstash_redis import Redis
+from io import BytesIO
+import xxhash
 import json
 import os
-from io import BytesIO
-from pdfminer.high_level import extract_pages
-from pdfminer.layout import LAParams
-from pdfminer.layout import LTTextContainer
-from upstash_redis import Redis
-from upstash_ratelimit import Ratelimit, FixedWindow
-import xxhash
 
 redis = Redis.from_env()
 
@@ -60,7 +59,7 @@ class handler(BaseHTTPRequestHandler):
                                 page_content += element.get_text()
                         page_contents.append(page_content.strip())
                     result = json.dumps({'total': total_pages, 'pages': page_contents})
-                    redis.set(xxh.digest(), result)
+                    redis.set(xxh.hexdigest(), result)
 
             self.send_response(200)
             self.send_header('content-type', 'application/json')
