@@ -64,6 +64,6 @@ class handler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps(result).encode("utf-8"))
+            self.wfile.write(result.encode("utf-8"))
         except Exception as e:
             self.send_error(500, 'Error extracting PDF content: {}'.format(e))
