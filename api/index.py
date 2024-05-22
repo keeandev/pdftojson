@@ -26,7 +26,7 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write('Welcome to the PDF to JSON API (pdfminer.six API)!\n'.encode('utf-8'))
         self.wfile.write(
-            f'Send a POST request to \'https://{os.environ["API_URL"]}\' with a binary file to extract its pages & contents!\n'.encode('utf-8'))
+            f'Send a POST request to \'https://{os.environ["API_URL"]}\' with a binary PDF file to extract its pages & contents!\n'.encode('utf-8'))
         self.wfile.write("GitHub: https://github.com/keeandev/pdftojson".encode("utf-8"))
         return
 
