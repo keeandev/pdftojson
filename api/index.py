@@ -13,7 +13,7 @@ redis = Redis.from_env()
 
 ratelimit = Ratelimit(
     redis=Redis.from_env(),
-    limiter=FixedWindow(max_requests=2, window=10),
+    limiter=FixedWindow(max_requests=2, window=1),
     prefix="upstash-ratelimit",
 )
 
