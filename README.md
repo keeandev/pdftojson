@@ -2,7 +2,7 @@
 
 https://pdftojson.vercel.app
 
-This is a simple utility API that converts PDFs to structured JSON objects powered by [pdfminer.six](https://github.com/pdfminer/pdfminer.six).
+This is a simple utility API that converts PDFs to structured JSON objects, powered by [pdfminer.six](https://github.com/pdfminer/pdfminer.six).
 
 ```json
 {
@@ -22,6 +22,6 @@ This is a simple utility API that converts PDFs to structured JSON objects power
 <div>🔒 Ratelimited (1s window, max 2 requests/window)</div>
 
 ## What I Learned
-- The value in caching & ratelimiting
+- The value of caching & ratelimiting
 - How to create an API in Python (I've always built them in TypeScript before this)
 - Hashes don't have to be long? What?
