@@ -16,8 +16,12 @@ This is a simple utility API that converts PDFs to structured JSON objects power
 ```
 
 ## Extra Goodies
-
 <div>📄 Gets a total page count</div>
 <div>#️⃣ Gives you a unique file hash (for your product)</div>
 <div>📦 Requests are cached with <a href="https://upstash.com">Upstash</a> (10k commands/day)</div>
 <div>🔒 Ratelimited (10s window, 2 max requests per window)</div>
+
+## What I Learned
+- The value in caching & ratelimiting
+- How to create an API in Python (I've always built them in TypeScript before this)
+- Hashes don't have to be long? What?
