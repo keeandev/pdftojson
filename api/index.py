@@ -18,8 +18,19 @@ ratelimit = Ratelimit(
 )
 
 class handler(BaseHTTPRequestHandler):
+    def _set_cors_headers(self, status=200, content_type='application/json'):
+        self.send_header('Access-Control-Allow-Origin', '*')  # Enable CORS
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')  # Allow headers
+
+    def do_OPTIONS(self):
+        # Handle preflight CORS requests
+        self.send_response(200)
+        self._set_cors_headers()
+        self.end_headers()
+
     def do_GET(self):
         self.send_response(200)
+        self._set_cors_headers()
         self.send_header('content-type', 'application/json')
         self.send_header('Cache-Control', 'max-age=86400, public')
         self.send_header('CDN-Cache-Control', 'max-age=86400, public')
@@ -64,6 +75,7 @@ class handler(BaseHTTPRequestHandler):
                     redis.set(hash, result)
 
             self.send_response(200)
+            self._set_cors_headers()
             self.send_header('content-type', 'application/json')
             self.end_headers()
             self.wfile.write(result.encode("utf-8"))
